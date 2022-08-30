@@ -43,11 +43,12 @@ namespace Assets.Scripts
             currentLevel = level;
             levelConfig = gameConfig.Levels[currentLevel - 1];
             ingredientContainer.SpawnIngridients(levelConfig.Ingredients);
+            uiManager.SetDesiredColor(levelConfig.DesiredColor);
         }
 
         void Start()
         {
-            SetLevel(3);
+            SetLevel(1);
         }
 
         void OnEnable()
