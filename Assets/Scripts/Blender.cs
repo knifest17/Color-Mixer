@@ -17,6 +17,7 @@ namespace Assets.Scripts
         List<Ingredient> ingredientList = new List<Ingredient>();
         bool lidOpened = false, addingIngrediet = false;
 
+        public event Action MixStarted;
         public event Action<Color> Mixed;
         public event Action<Ingredient> IngrediendAdded;
 
@@ -60,6 +61,7 @@ namespace Assets.Scripts
             StartCoroutine(MixingRoutine());
             IEnumerator MixingRoutine()
             {
+                MixStarted?.Invoke();
                 //floor.DOLocalMoveY(0.1f, mixDuration + 0.5f);
                 //containerCollider.DOLocalRotate(new Vector3(0, 360, 0), mixDuration, RotateMode.FastBeyond360);
                 transform.DOShakeRotation(mixDuration, 10);
@@ -76,6 +78,7 @@ namespace Assets.Scripts
         public void Clear()
         {
             ingredientContainer.DestroyChildren();
+            ingredientList.Clear();
             Vector3 floorPos = floor.localPosition;
             floorPos.y = 0;
             floor.localPosition = floorPos;

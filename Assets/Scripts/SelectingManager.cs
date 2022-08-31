@@ -16,8 +16,14 @@ namespace Assets.Scripts
 
         void Update()
         {
+#if UNITY_ANDROID
+            if (Input.touchCount <= 0) return;
+            Vector2 point = Input.GetTouch(0).position;
+#else
             if (!Input.GetMouseButtonDown(0)) return;
-            var ray = cam.ScreenPointToRay(Input.mousePosition);
+            Vector2 point = Input.mousePosition;
+#endif
+            var ray = cam.ScreenPointToRay(point);
             RaycastHit hit;
             if(Physics.Raycast(ray,out hit))
             {
