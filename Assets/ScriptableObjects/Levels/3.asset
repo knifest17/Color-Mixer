@@ -15,7 +15,9 @@ MonoBehaviour:
   desiredColor: {r: 0.58431375, g: 0.19607843, b: 0.2, a: 1}
   ingredients:
   - {fileID: 6016058794290890306, guid: 72f448a98efad724cbab5f7819e50dec, type: 3}
-  - {fileID: 5095041104787963119, guid: fd76cf31c61fa9a4aa3188d7999c55be, type: 3}
-  - {fileID: 230289710559146019, guid: dcb502123e259c04c8a72ac713189c51, type: 3}
   - {fileID: 7320267385531881315, guid: 4dce833062504a446887c58c386b3253, type: 3}
+  - {fileID: 5095041104787963119, guid: fd76cf31c61fa9a4aa3188d7999c55be, type: 3}
   - {fileID: 8267350177239019852, guid: b3c955a0bc56f7546986ac7eae2cef3e, type: 3}
+  - {fileID: 230289710559146019, guid: dcb502123e259c04c8a72ac713189c51, type: 3}
+  useColorGenerating: 0
+  desiredIngredients: []

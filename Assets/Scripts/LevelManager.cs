@@ -27,10 +27,12 @@ namespace Assets.Scripts
 
         void OnResultColor(Color color)
         {
+            uiManager.ShowResult(true);
             uiManager.SetResultColor(color);
             float match = ColorTools.CompareColors(color, levelConfig.DesiredColor);
             print(match);
             var compliancePercent = Math.Ceiling(Mathf.Pow(match * 100, 2) / 100);
+            uiManager.SetResultPercent((float)compliancePercent / 100.0f);
             print(compliancePercent);
             //if (compliancePercent >= 85) SetLevel(currentLevel + 1);
         }
@@ -48,7 +50,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            SetLevel(1);
+            SetLevel(3);
         }
 
         void OnEnable()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -7,8 +8,15 @@ namespace Assets.Scripts
     {
         [SerializeField] Color desiredColor;
         [SerializeField] Ingredient[] ingredients;
+        [SerializeField] bool useColorGenerating;
+        [SerializeField] Ingredient[] desiredIngredients;
 
-        public Color DesiredColor  => desiredColor;
+        public Color DesiredColor  => useColorGenerating ? GetGeneratedColor() : desiredColor;
         public Ingredient[] Ingredients  => ingredients;
+
+        Color GetGeneratedColor()
+        {
+            return ColorTools.CombineColors(desiredIngredients.Select(i => i.Color).ToArray());
+        }
     }
 }
