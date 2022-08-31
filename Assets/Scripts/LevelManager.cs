@@ -33,7 +33,7 @@ namespace Assets.Scripts
         }
         void OnIngredientAdded(Ingredient ingredient)
         {
-
+            uiManager.SetMixBtn(true);
         }
 
         void OnMixStarted()
@@ -61,7 +61,6 @@ namespace Assets.Scripts
         void SetLevel(int level)
         {
             uiManager.ShowResult(false);
-            uiManager.SetMixBtn(true);
             ingredientContainer.Clear();
             blender.Clear();
             currentLevel = level;

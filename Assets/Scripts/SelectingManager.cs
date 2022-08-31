@@ -18,6 +18,7 @@ namespace Assets.Scripts
         {
 #if UNITY_ANDROID
             if (Input.touchCount <= 0) return;
+            if (Input.GetTouch(0).phase != TouchPhase.Began) return;
             Vector2 point = Input.GetTouch(0).position;
 #else
             if (!Input.GetMouseButtonDown(0)) return;
