@@ -6,15 +6,16 @@ using System;
 
 namespace Assets.Scripts
 {
-    public class UIManager : MonoBehaviour
+    public class VisualizationManager : MonoBehaviour
     {
-        [SerializeField] Transform desiredColor;
-        [SerializeField] SpriteRenderer desiredColorImage;
-        [SerializeField] RectTransform resultScreen, resultBar;
+        [Header("UI")]
         [SerializeField] TMPro.TMP_Text resultText;
-        [SerializeField] Button mixBtn, nextBtn, restartBtn;
+        [SerializeField] Transform resultScreen, resultBar, buttons;
+        [SerializeField] Transform mixBtn, nextBtn, restartBtn;
 
         [Header("Background Character")]
+        [SerializeField] Transform desiredColor;
+        [SerializeField] SpriteRenderer desiredColorImage;
         [SerializeField] Transform developer;
         [SerializeField] Animator developerAnimator;
         [SerializeField] RuntimeAnimatorController idle, jump;
@@ -34,10 +35,11 @@ namespace Assets.Scripts
             desiredColor.DOScale(0, 0.5f);
             desiredColor.DOScale(1, 1).SetDelay(0.5f);
         }
-
+                
         public void ShowResult(bool show)
         {
-            resultScreen.gameObject.SetActive(show);
+            resultScreen.DOScale(show ? 1 : 0, 0.5f);
+            //resultScreen.gameObject.SetActive(show);
             resultBar.localScale = new Vector3(0, 1, 1);
             SetNextBtn(false);
             SetRestartBtn(false);
@@ -67,11 +69,22 @@ namespace Assets.Scripts
             resultBar.GetComponent<RawImage>().color = color;
         }
 
-        public void SetMixBtn(bool active) => mixBtn.gameObject.SetActive(active);
+        public void SetMixBtn(bool active)
+        {
+            mixBtn.DOScale(active ? 1 : 0, 0.5f);
+        }
 
-        public void SetNextBtn(bool active) => nextBtn.gameObject.SetActive(active);
+        public void SetNextBtn(bool active)
+        {
+            nextBtn.gameObject.SetActive(active);
+            ShowButtons(active);
+        }
 
-        public void SetRestartBtn(bool active) => restartBtn.gameObject.SetActive(active);
+        public void SetRestartBtn(bool active)
+        {
+            restartBtn.gameObject.SetActive(active);
+            ShowButtons(active);
+        }
 
         public void SetWinBackground(bool active)
         {
@@ -82,6 +95,17 @@ namespace Assets.Scripts
                 developer.transform.DOLocalMoveY(0, 0.2f);
                 confettiParticles.Stop();
             }
+        }
+
+        void ShowButtons(bool active)
+        {
+            buttons.DOScale(active ? 1 : 0, 0.5f);
+        }
+
+        void Start()
+        {
+            resultScreen.localScale = Vector3.zero;
+            mixBtn.transform.localScale = Vector3.zero;
         }
     }
 }

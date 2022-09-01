@@ -9,7 +9,7 @@ namespace Assets.Scripts
     {
         [SerializeField] SelectingManager selectingManager;
         [SerializeField] Blender blender;
-        [SerializeField] UIManager uiManager;
+        [SerializeField] VisualizationManager uiManager;
         [SerializeField] IngridientContainer ingredientContainer;
         [SerializeField] GameConfigSO gameConfig;
 
