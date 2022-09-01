@@ -29,7 +29,9 @@ namespace Assets.Scripts
 
         void OnIngredientSelected(Ingredient ingredient)
         {
-            ingredientContainer.RestoreIngridient(ingredient);
+            var restorePosition = ingredient.transform.localPosition;
+            ingredientContainer.RestoreIngridient(ingredient, restorePosition);
+            blender.AddIngredient(ingredient);
         }
         void OnIngredientAdded(Ingredient ingredient)
         {
@@ -39,6 +41,7 @@ namespace Assets.Scripts
         void OnMixStarted()
         {
             uiManager.SetMixBtn(false);
+            selectingManager.gameObject.SetActive(false);
         }
 
         void OnResultColor(Color color)
@@ -54,12 +57,17 @@ namespace Assets.Scripts
 
         void OnResultShown()
         {
-            if (lastResult >= 85) uiManager.SetNextBtn(true);
+            if (lastResult >= 85)
+            {
+                uiManager.SetNextBtn(true);
+                uiManager.SetWinBackground(true);
+            }
             else uiManager.SetRestartBtn(true);
         }
 
         void SetLevel(int level)
         {
+            uiManager.SetWinBackground(false);
             uiManager.ShowResult(false);
             ingredientContainer.Clear();
             blender.Clear();
@@ -67,6 +75,8 @@ namespace Assets.Scripts
             levelConfig = gameConfig.Levels[currentLevel - 1];
             ingredientContainer.SpawnIngridients(levelConfig.Ingredients);
             uiManager.SetDesiredColor(levelConfig.DesiredColor);
+            selectingManager.gameObject.SetActive(true);
+            uiManager.SetMixBtn(false);
         }
 
         void Start()

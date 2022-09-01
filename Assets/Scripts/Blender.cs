@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -23,22 +24,29 @@ namespace Assets.Scripts
 
         public void AddIngredient(Ingredient ingredient)
         {
+            ingredient.IsAddedToMixer = true;
+            if(ingredientList.Count >= 5)
+            {
+                var ingr = ingredientList[ingredientList.Count - 5];
+                Destroy(ingr.GetComponent<Rigidbody>());
+                Destroy(ingr.GetComponent<Collider>());
+            }
             StartCoroutine(OnMovingEndRoutine());
             IEnumerator OnMovingEndRoutine()
             {
+                addingIngrediet = true;
                 if (!lidOpened)
                 {
                     lid.DOKill();
-                    lid.DOJump(lidOpen.position, 0.1f, 1, openDuration);
-                    lid.DORotateQuaternion(lidOpen.rotation, openDuration);
+                    lid.DOLocalJump(lidOpen.localPosition, 0.1f, 1, openDuration);
+                    lid.DOLocalRotateQuaternion(lidOpen.localRotation, openDuration);
                     yield return new WaitForSeconds(openDuration);
                     lidOpened = true;
                 }
                 var ingrTrans = ingredient.transform;
                 ingrTrans.SetParent(ingredientContainer);
-                ingrTrans.DOLocalJump(new Vector3(0.05f, 0.1f, 0), jumpPower, 1, jumpDuration);
+                ingrTrans.DOLocalJump(new Vector3(0, 0.1f, 0), jumpPower, 1, jumpDuration);
                 ingrTrans.DOLocalRotate(jumpRotation, jumpDuration);
-                addingIngrediet = true;
                 yield return new WaitForSeconds(jumpDuration);
                 ingredient.gameObject.AddComponent<Rigidbody>();
                 ingredientList.Add(ingredient);
@@ -50,7 +58,7 @@ namespace Assets.Scripts
                 if (lidOpened && !addingIngrediet)
                 {
                     lid.DOLocalJump(lidClose.localPosition, 0.1f, 1, openDuration);
-                    lid.DORotateQuaternion(lidClose.rotation, openDuration);
+                    lid.DOLocalRotateQuaternion(lidClose.localRotation, openDuration);
                     lidOpened = false;
                 }
             }
@@ -63,12 +71,19 @@ namespace Assets.Scripts
             {
                 MixStarted?.Invoke();
                 //floor.DOLocalMoveY(0.1f, mixDuration + 0.5f);
-                //containerCollider.DOLocalRotate(new Vector3(0, 360, 0), mixDuration, RotateMode.FastBeyond360);
+                containerCollider.DOLocalRotate(new Vector3(0, 360, 0), mixDuration, RotateMode.FastBeyond360);
                 transform.DOShakeRotation(mixDuration, 10);
+                Camera.main.transform.DOShakePosition(mixDuration, 0.01f);
                 var color = ColorTools.CombineColors(ingredientList.Select(i => i.Color).ToArray());
+                fluid.gameObject.SetActive(true);
                 fluid.DOScaleY(0.3f, mixDuration);
+                float d = 0;
+                float incr = 1f / ingredientList.Count;
                 foreach (Ingredient i in ingredientList)
-                    i.transform.DOScale(0.05f, mixDuration);
+                {
+                    i.transform.DOScale(0, mixDuration - d).SetDelay(d += incr);
+                    i.transform.DOLocalMoveY(-0.1f, mixDuration - d).SetDelay(d += incr);
+                }
                 fluid.gameObject.GetComponent<MeshRenderer>().material.color = color;
                 yield return new WaitForSeconds(mixDuration);
                 Mixed?.Invoke(color);
@@ -85,6 +100,7 @@ namespace Assets.Scripts
             var fluidScale = fluid.localScale;
             fluidScale.y = 0;
             fluid.localScale = fluidScale;
+            fluid.gameObject.SetActive(false);
         }
     }
 }

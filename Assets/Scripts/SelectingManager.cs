@@ -26,13 +26,16 @@ namespace Assets.Scripts
 #endif
             var ray = cam.ScreenPointToRay(point);
             RaycastHit hit;
-            if(Physics.Raycast(ray,out hit))
+            if (Physics.Raycast(ray, out hit))
             {
                 var ingredient = hit.transform.GetComponent<Ingredient>();
-                if (ingredient is not null)
+                if (ingredient is not null && !ingredient.IsAddedToMixer)
                 {
                     IngredientSelected?.Invoke(ingredient);
-                    blender.AddIngredient(ingredient);
+                }
+                else if (ingredient is not null && ingredient.IsAddedToMixer)
+                {
+                    print("Already added");
                 }
             }
         }

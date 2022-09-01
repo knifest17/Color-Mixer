@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public class IngridientContainer : MonoBehaviour
     {
-        [SerializeField] float space;
+        [SerializeField] float space, restoreDuration;
         [SerializeField] Transform container, jumpStart;
 
         public void SpawnIngridients(Ingredient[] ingredients)
@@ -19,12 +19,11 @@ namespace Assets.Scripts
             }
         }
 
-        public void RestoreIngridient(Ingredient ingredient)
+        public void RestoreIngridient(Ingredient ingredient, Vector3 position)
         {
-            var targetPoint = ingredient.transform.localPosition;
             var newIngr = Instantiate(ingredient, container).transform;
             newIngr.localPosition = jumpStart.localPosition;
-            newIngr.DOLocalJump(targetPoint, 0.5f, 1, 0.5f);
+            newIngr.DOLocalJump(position, 0.5f, 1, restoreDuration);
         }
 
         public void Clear() => container.DestroyChildren();
